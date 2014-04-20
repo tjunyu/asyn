@@ -1,0 +1,47 @@
+<beans  
+    xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:jee="http://www.springframework.org/schema/jee"  
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xmlns:tx="http://www.springframework.org/schema/tx"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xsi:schemaLocation="     
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd     
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd     
+       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd    
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd    
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd"   
+    >
+   
+   <bean id="asynWorkHandler" class="com.taobao.asyn.spring.AsynWorkHandler">
+       <property name="asynWorkService"><!-- 配置了就使用配置的，不配置就默认实例化一个专用的 -->
+           <ref bean="asynWorkService"/>
+       </property>
+       <property name="asynMap">
+            <map>
+              <entry key="com.taobao.asyn.TestCase" value="sayThread">
+              </entry>
+            </map>      
+       </property>
+   </bean>
+   
+   <bean id="testCase" class="com.taobao.asyn.TestCase">
+   </bean>
+   
+   <bean id="springBeanUtil" class="com.taobao.asyn.spring.AsynWorkSpringUtil">
+   </bean>
+	
+   <bean id="asynWorkService" class="com.taobao.asyn.spring.AsynServiceFactoryBean">
+	    <!--设置自定义相关参数， 下面这些参数都可以省略，都有默认值的-->
+	    <property name="CORE_POOL_SIZE" value="5"></property><!--最小线程数-->
+		<property name="KEEP_ALIVE_TIME" value="1000"></property><!--线程空闲时间-->
+		<property name="MAX_POOL_SIZE" value="10"></property><!--最大线程数-->
+		<property name="WORK_QUEUE_SIZE" value="20"></property><!--缓冲队列-->
+		<property name="defaultHandlder" value="CallerRunsPolicy"></property><!--默认提供的策略 CallerRunsPolicy，AbortPolicy，DiscardOldestPolicy，DiscardPolicy-->
+		<!--  <property name="rejectedExecutionHandler" value="yourself"></property>自定义策略-->
+		<!--加载策略的时候以自定义策略优先，不存在自定义策略的时候加载默认策略，两个策略都不存在的时候加载CallerRunsPolicy策略-->
+   </bean>
+   
+   
+  
+</beans>
